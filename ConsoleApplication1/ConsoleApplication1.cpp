@@ -560,3 +560,123 @@ int main()
 }
 
 */
+
+/*
+
+#include "stdafx.h"
+#include <iostream>
+#include <sstream>
+#include <windows.h>
+#include <cmath>
+
+using namespace std;
+
+#define M_PI  3.14159265358979323846
+
+int main()
+{
+	POINT P;
+	int n = 64, k = 5000, wier = 4, kol = 4;
+	int tabA[64][64], tabB[16][16];
+	int wynik_x, wynik_y;
+	int pointer = 0, blok = 4;
+
+	for (int i = 0; i < 64; i++) {
+		for (int j = 0; j < 64; j++) {
+			tabA[i][j] = 0;
+			if (i < 16 && j < 16)
+				tabB[i][j] = 0;
+		}
+	}
+
+	while (pointer < 100) {
+		if (GetCursorPos(&P)) {
+			wynik_x = (P.x + P.y) % n;
+			wynik_y = abs(int(P.y + k * sin(n / (2 * M_PI))) % n);
+
+			cout << wynik_x;
+			cout << wynik_y;
+
+			tabA[wynik_x][wynik_y] = 1;
+
+			pointer++;
+
+			system("cls");
+		}
+	}
+
+	for (int i = 0; i < 64; i++) {
+		for (int j = 0; j < 64; j++)
+			cout << tabA[i][j];
+		cout << endl;
+	}
+
+	int kolB = 0, wierB = 0;
+	int tempK = 0, tempW = 0;
+	int parzysta;
+
+	while (wierB <= 16) {
+		while (kolB <= 16) {
+			parzysta = 0;
+			for (int i = (wier - 4); i < wier; i++) {
+				for (int j = (kol - 4); j < kol; j++) {
+					if (tabA[i][j] == 1)
+						parzysta++;
+				}
+			}
+			kol += 4;
+			tabB[wierB][kolB] = parzysta % 2;
+			//cout << parzysta << " " << tabB[wierB][kolB] << " " << wier << " " << kol << endl;
+			kolB++; //wyzerować przy nowej lini
+			cout << wierB << endl;
+		}
+		wier += 4;
+		kol = 0;
+		kolB = 0;
+		wierB++;
+	}
+
+
+	cout << endl;
+	cout << endl;
+	for (int i = 0; i < 16; i++) {
+		for (int j = 0; j < 16; j++)
+			cout << tabB[i][j] << " ";
+		cout << endl;
+	}
+
+	string wynikk = "";
+	unsigned int liczba_losowa;
+	cout << "System dwojkowy : " << endl;
+	for (int i = 0; i < 16; i++)
+	{
+		for (int j = 0; j < 16; j++)
+		{
+
+			ostringstream ss;
+			ss << tabB[i][j];
+			string wynikk = ss.str();
+			cout << wynikk;
+
+		}
+	}
+	cout << endl;
+	unsigned long long liczba_los = 0;
+	unsigned long long mnoznik = 1;
+	for (int i = 15; i >= 0; i--)
+	{
+		for (int j = 15; j >= 0; j--)
+		{
+			liczba_los += (tabB[i][j] * mnoznik);
+			mnoznik *= 2;
+
+		}
+	}
+	cout << "Liczba wylosowana : ";
+	cout << liczba_los << endl;
+
+	system("Pause");
+	return 0;
+}
+
+*/
