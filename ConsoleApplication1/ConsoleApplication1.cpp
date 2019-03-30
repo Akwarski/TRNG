@@ -11,7 +11,7 @@ using namespace std;
 
 #define M_PI  3.14159265358979323846
 
-void zerowanieTab(int **tabA, int **tabB, int **tabC, int **tabX, int **tabY, int **tabZ, int macierzA, int macierzB, int macierzC);
+void zerowanieTab(int **tabA, int **tabB, int **tabC, int **tablicaA, int **tabX, int **tabY, int **tabZ, int **tablicaX, int macierzA, int macierzB, int macierzC, int macierzD);
 void dispTab(int **tab, int macierz, string space);
 string binSystem(int ** tab, int macierz, string wynik);
 void lessVal(int ** tab, int **tab8, int macierz);
@@ -23,11 +23,12 @@ int main()
 	int n = 64, k = 5000, wier = 4, kol = 4;
 	int kolB = 0, wierB = 0;
 
-	int macierzA = 64, macierzB = 16, macierzC = 8;
+	int macierzA = 64, macierzB = 16, macierzC = 8, macierzD = 4;
 
 	int **tabA = new int*[macierzA], **tabX = new int*[macierzA];
 	int **tabB = new int*[macierzB], **tabY = new int*[macierzB];
 	int **tabC = new int*[macierzC], **tabZ = new int*[macierzC];
+	int **tablicaA = new int*[macierzD], **tablicaX = new int*[macierzD];
 	//int tabB[16][16], tabY[16][16];
 	//int tabA[64][64], tabX[64][64];
 	int pierwotny_x, pierwotny_y, wynik_x, wynik_y;
@@ -49,9 +50,13 @@ int main()
 			tabC[i] = new int[macierzC];
 			tabZ[i] = new int[macierzC];
 		}
+		if (i < macierzD) {
+			tablicaA[i] = new int[macierzD];
+			tablicaX[i] = new int[macierzD];
+		}
 	}
 
-	zerowanieTab(tabA,tabB,tabC, tabX,tabY, tabZ, macierzA, macierzB, macierzC);
+	zerowanieTab(tabA, tabB, tabC, tablicaA, tabX, tabY, tabZ, tablicaX, macierzA, macierzB, macierzC, macierzD);
 
 	//ilość próbek:
 	while (pointer < 100){
@@ -79,8 +84,8 @@ int main()
 	cout << "\nPo entropii: \n";
 	dispTab(tabA, macierzA, "");
 	
-	while (wierB <= 15) {
-		while (kolB <= 15) {
+	while (wierB < 16) {
+		while (kolB < 16) {
 			parzystaPo = 0;
 			parzystaPrzed = 0;
 			for (int i = (wier - 4); i < wier; ++i) {
@@ -91,13 +96,13 @@ int main()
 						parzystaPrzed++;
 				}
 			}
-			kol += 4;
 			tabY[wierB][kolB] = parzystaPrzed % 2;
 			tabB[wierB][kolB] = parzystaPo % 2;
+			kol += 4;
 			kolB++;
 		}
 		wier += 4;
-		kol = 0;
+		kol = 4;
 		kolB = 0;
 		wierB++;
 	}
@@ -111,16 +116,28 @@ int main()
 	//cout << "\nWynik w systemie dwojkowym przed entropia: \n" << binSystem(tabY, macierzB, wynik);
 
 	//zamiana na wartosc 8 bitowa
-	lessVal(tabB, tabC, macierzB);
-	lessVal(tabY, tabZ, macierzB);
+	lessVal(tabB, tabC, macierzC);
+	lessVal(tabY, tabZ, macierzC);
 
 	cout << endl << "przed entropia 8x8: ";
 	decValue(tabZ, macierzC);
 	dispTab(tabZ, macierzC, space);
 
-	cout << endl << "po entropi ";
+	cout << endl << "po entropi 8x8: ";
 	decValue(tabC, macierzC);
 	dispTab(tabC, macierzC, space);
+
+	//zamiana na wartosc 4 bitowa
+	lessVal(tabC, tablicaA, macierzD);
+	lessVal(tabZ, tablicaX, macierzD);
+
+	cout << endl << "przed entropia 4x4: ";
+	decValue(tablicaX, macierzD);
+	dispTab(tablicaX, macierzD, space);
+
+	cout << endl << "po entropi 4x4: ";
+	decValue(tablicaA, macierzD);
+	dispTab(tablicaA, macierzD, space);
 	
 
 	for (int i = 0; i < macierzA; i++) {
@@ -141,7 +158,7 @@ int main()
 	return 0;
 }
 
-void zerowanieTab(int **tabA, int **tabB, int **tabC, int **tabX, int **tabY, int **tabZ, int macierzA, int macierzB, int macierzC) {
+void zerowanieTab(int **tabA, int **tabB, int **tabC, int **tablicaA, int **tabX, int **tabY, int **tabZ, int **tablicaX, int macierzA, int macierzB, int macierzC, int macierzD) {
 	for (int i = 0; i < macierzA; ++i) {
 		for (int j = 0; j < macierzA; ++j) {
 			tabA[i][j] = 0;
@@ -153,6 +170,10 @@ void zerowanieTab(int **tabA, int **tabB, int **tabC, int **tabX, int **tabY, in
 			if (i < macierzC && j < macierzC) {
 				tabC[i][j] = 0;
 				tabZ[i][j] = 0;
+			}
+			if (i < macierzD && j < macierzD) {
+				tablicaA[i][j] = 0;
+				tablicaX[i][j] = 0;
 			}
 		}
 	}
@@ -177,30 +198,28 @@ string binSystem(int ** tab, int macierz, string wynik) {
 	return wynik;
 }
 
-void lessVal(int ** tab, int ** tab8, int macierz) {
-	int kolC = 0, wierC = 0;
-	int kol8=2, wier8=2;
+void lessVal(int ** tab, int ** tabN, int macierz) {
+	int kolNew = 0, wierNew = 0;
+	int kolumna=2, wiersz=2;
 	int licznik = 0;
 
-	while (wierC <= 3) {
-		while (kolC <=3 ) {
+	while (wierNew < macierz) {
+		while (kolNew < macierz) {
 			licznik = 0;
-			for (int i = (wier8-2); i < wier8; ++i) {
-				for (int j = (kol8-2); j < kol8; ++j) {
-					cout << tab[i][j] << " ";
+			for (int i = (wiersz -2); i < wiersz; ++i) {
+				for (int j = (kolumna -2); j < kolumna; ++j) {
 					if (tab[i][j] == 1)
 						licznik++;
 				}
 			}
-			cout << endl;
-			tab8[wierC][kolC] = licznik % 2;
-			kol8 += 2;
-			kolC++;
+			tabN[wierNew][kolNew] = licznik % 2;
+			kolumna += 2;
+			kolNew++;
 		}
-		kolC = 0;
-		kol8 = 0;
-		wier8 += 2;
-		wierC++;
+		kolNew = 0;
+		kolumna = 2;
+		wiersz += 2;
+		wierNew++;
 	}
 }
 
@@ -215,5 +234,3 @@ void decValue(int ** tab, int macierz) {
 	}
 	cout << "Liczba wylosowana : " << liczba_los << endl;
 }
-
-//zliczanie wartości co 8 bitów i następnie dodawanie ich
