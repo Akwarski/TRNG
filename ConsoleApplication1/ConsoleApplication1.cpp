@@ -78,10 +78,10 @@ int main()
 		}
 	}
 	
-	cout << "Przed entropia: \n";
+	cout << "before postprocessing 64x64: \n";
 	dispTab(tabX, macierzA, "");
 
-	cout << "\nPo entropii: \n";
+	cout << "\nafter postprocessing 64x64: \n";
 	dispTab(tabA, macierzA, "");
 	
 	while (wierB < 16) {
@@ -107,10 +107,10 @@ int main()
 		wierB++;
 	}
 
-	cout << "\n\n16x16 przed entropii: \n";
+	cout << "\n\nbefore postprocessing 16x16: \n";
 	dispTab(tabY, macierzB, space);
 
-	cout << "\n16x16 po entropia: \n";
+	cout << "\nafter postprocessing16x16: \n";
 	dispTab(tabB, macierzB, space);
 	
 	//cout << "\nWynik w systemie dwojkowym przed entropia: \n" << binSystem(tabY, macierzB, wynik);
@@ -119,11 +119,11 @@ int main()
 	lessVal(tabB, tabC, macierzC);
 	lessVal(tabY, tabZ, macierzC);
 
-	cout << endl << "przed entropia 8x8: ";
+	cout << endl << "before postprocessing 8x8: ";
 	decValue(tabZ, macierzC);
 	dispTab(tabZ, macierzC, space);
 
-	cout << endl << "po entropi 8x8: ";
+	cout << endl << "after postprocessing 8x8: ";
 	decValue(tabC, macierzC);
 	dispTab(tabC, macierzC, space);
 
@@ -131,11 +131,11 @@ int main()
 	lessVal(tabC, tablicaA, macierzD);
 	lessVal(tabZ, tablicaX, macierzD);
 
-	cout << endl << "przed entropia 4x4: ";
+	cout << endl << "before postprocessing 4x4: ";
 	decValue(tablicaX, macierzD);
 	dispTab(tablicaX, macierzD, space);
 
-	cout << endl << "po entropi 4x4: ";
+	cout << endl << "after postprocessing 4x4: ";
 	decValue(tablicaA, macierzD);
 	dispTab(tablicaA, macierzD, space);
 	
