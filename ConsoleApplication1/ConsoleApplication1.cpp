@@ -12,7 +12,7 @@ using namespace std;
 #define M_PI  3.14159265358979323846
 
 void zerowanieTab(int **tabA, int **tabB, int **tabY, int **tabX, int macierzA, int macierzB);
-void dispTab(int **tab, int macierz);
+void dispTab(int **tab, int macierz, string space);
 
 int main()
 {
@@ -22,8 +22,10 @@ int main()
 	int macierzA = 64, macierzB = 16;
 
 
-	int **tabA = new int*[64], **tabB = new int*[16], **tabX = new int*[64], **tabY = new int*[16];
-	//int tabX[64][64], tabY[16][16], tabA[64][64], tabB[16][16];
+	int **tabA = new int*[macierzA], **tabX = new int*[macierzA];
+	int **tabB = new int*[macierzB], **tabY = new int*[macierzB];
+	//int tabB[16][16], tabY[16][16];
+	//int tabA[64][64], tabX[64][64];
 	int pierwotny_x, pierwotny_y, wynik_x, wynik_y;
 	int pointer = 0, blok = 4;
 	int kolB = 0, wierB = 0;
@@ -31,17 +33,24 @@ int main()
 	double a = GetSystemMetrics(SM_CXSCREEN);
 	double b = GetSystemMetrics(SM_CYSCREEN);
 	double dzielnik_x = a/64, dzielnik_y = b/64;
+	string space = " ", wynikPrzed = "";
 
-
-	tabA[] = new int[macierzA];
+	for (int i = 0; i < macierzA; ++i) {
+		tabA[i] = new int [macierzA];
+		tabX[i] = new int [macierzA];
+		if (i < macierzB) {
+			tabB[i] = new int[macierzB];
+			tabY[i] = new int[macierzB];
+		}
+	}
 
 	zerowanieTab(tabA,tabB,tabX,tabY, macierzA, macierzB);
 
 	//ilość próbek:
 	while (pointer < 100){
 		if (GetCursorPos(&P)) {
-			pierwotny_x = (P.x/dzielnik_x) + 1;
-			pierwotny_y = (P.y/dzielnik_y) + 1;
+			pierwotny_x = int(P.x/dzielnik_x);
+			pierwotny_y = int(P.y/dzielnik_y);
 
 			wynik_x = (P.x + P.y) %n;
 			wynik_y = abs(int(P.y + k * sin(n / (2 * M_PI))) % n);
@@ -58,11 +67,10 @@ int main()
 	}
 	
 	cout << "Przed entropia: \n";
-	dispTab(tabX, macierzA);
+	dispTab(tabX, macierzA, "");
 
 	cout << "\nPo entropii: \n";
-	dispTab(tabA, macierzA);
-
+	dispTab(tabA, macierzA, "");
 	
 	while (wierB <= 15) {
 		while (kolB <= 15) {
@@ -77,7 +85,7 @@ int main()
 				}
 			}
 			kol += 4;
-			tabX[wierB][kolB] = parzystaPrzed % 2;
+			tabY[wierB][kolB] = parzystaPrzed % 2;
 			tabB[wierB][kolB] = parzystaPo % 2;
 			kolB++;
 		}
@@ -88,26 +96,18 @@ int main()
 	}
 
 	cout << "\n\n16x16 przed entropii: \n";
-	for (int i = 0; i < 16; ++i) {
-		for (int j = 0; j < 16; ++j)
-			cout << tabX[i][j] << " ";
-		cout << endl;
-	}
+	dispTab(tabY, macierzB, space);
 
 	cout << "\n16x16 po entropia: \n";
-	for (int i = 0; i < 16; ++i) {
-		for (int j = 0; j < 16; ++j)
-			cout << tabB[i][j] << " ";
-		cout << endl;
-	}
+	dispTab(tabB, macierzB, space);
 	
-	string wynikPrzed = "";
+	string ;
 	
 	cout << "\nWynik w systemie dwojkowym przed entropia: \n";
 	for (int i = 0; i < 16; ++i){
 		for (int j = 0; j < 16; ++j){
 			ostringstream ss;
-			ss << tabB[i][j];
+			ss << tabY[i][j];
 			wynikPrzed = ss.str();
 			cout << wynikPrzed;
 		}
@@ -124,9 +124,19 @@ int main()
 	cout << "Liczba wylosowana : ";
 	cout << liczba_los << endl;
 
-	tabA[0][0];
+	for (int i = 0; i < macierzA; i++) {
+		delete[] tabA[i];
+		delete[] tabX[i];
+		if (i < macierzB) {
+			delete[] tabB[i];
+			delete[] tabY[i];
+		}
+	}
 
-	delete[]tabA;
+	delete[] tabA;
+	delete[] tabB;
+	delete[] tabX;
+	delete[] tabY;
 
 	system("Pause");
 	return 0;
@@ -137,7 +147,7 @@ void zerowanieTab(int **tabA, int **tabB, int **tabY, int **tabX, int macierzA, 
 		for (int j = 0; j < macierzA; ++j) {
 			tabA[i][j] = 0;
 			tabY[i][j] = 0;
-			if (i < 16 && j < macierzB) {
+			if (i < macierzB && j < macierzB) {
 				tabB[i][j] = 0;
 				tabX[i][j] = 0;
 			}
@@ -145,14 +155,13 @@ void zerowanieTab(int **tabA, int **tabB, int **tabY, int **tabX, int macierzA, 
 	}
 }
 
-void dispTab(int **tab, int macierz) {
+void dispTab(int **tab, int macierz, string space) {
 	for (int i = 0; i < macierz; ++i) {
-		for (int j = 0; j < 64; ++j)
-			cout << tab[i][j];
+		for (int j = 0; j < macierz; ++j)
+			cout << tab[i][j] << space;
 		cout << endl;
 	}
 }
-
 
 //zliczanie wartości co 8 bitów i następnie dodawanie ich
 
