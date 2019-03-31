@@ -11,7 +11,8 @@ using namespace std;
 
 #define M_PI  3.14159265358979323846
 
-void zerowanieTab(int **tabA, int **tabB, int **tabC, int **tablicaA, int **tabX, int **tabY, int **tabZ, int **tablicaX, int macierzA, int macierzB, int macierzC, int macierzD);
+void zerowanieTab(int **tabA, int **tabB, int **tabC, int **tablicaA, int **tablicaB, int **tabX, int **tabY, int **tabZ, int **tablicaX, int **tablicaY, 
+	int macierzA, int macierzB, int macierzC, int macierzD, int macierzE);
 void dispTab(int **tab, int macierz, string space);
 string binSystem(int ** tab, int macierz, string wynik);
 void lessVal(int ** tab, int **tab8, int macierz);
@@ -23,12 +24,13 @@ int main()
 	int n = 64, k = 5000, wier = 4, kol = 4;
 	int kolB = 0, wierB = 0;
 
-	int macierzA = 64, macierzB = 16, macierzC = 8, macierzD = 4;
+	int macierzA = 64, macierzB = 16, macierzC = 8, macierzD = 4, macierzE = 2;
 
 	int **tabA = new int*[macierzA], **tabX = new int*[macierzA];
 	int **tabB = new int*[macierzB], **tabY = new int*[macierzB];
 	int **tabC = new int*[macierzC], **tabZ = new int*[macierzC];
 	int **tablicaA = new int*[macierzD], **tablicaX = new int*[macierzD];
+	int **tablicaB = new int*[macierzE], **tablicaY = new int*[macierzE];
 	//int tabB[16][16], tabY[16][16];
 	//int tabA[64][64], tabX[64][64];
 	int pierwotny_x, pierwotny_y, wynik_x, wynik_y;
@@ -54,9 +56,13 @@ int main()
 			tablicaA[i] = new int[macierzD];
 			tablicaX[i] = new int[macierzD];
 		}
+		if (i < macierzE) {
+			tablicaB[i] = new int[macierzE];
+			tablicaY[i] = new int[macierzE];
+		}
 	}
 
-	zerowanieTab(tabA, tabB, tabC, tablicaA, tabX, tabY, tabZ, tablicaX, macierzA, macierzB, macierzC, macierzD);
+	zerowanieTab(tabA, tabB, tabC, tablicaA, tablicaB, tabX, tabY, tabZ, tablicaX, tablicaY, macierzA, macierzB, macierzC, macierzD, macierzE);
 
 	//ilość próbek:
 	while (pointer < 100){
@@ -138,6 +144,18 @@ int main()
 	cout << endl << "after postprocessing 4x4: ";
 	decValue(tablicaA, macierzD);
 	dispTab(tablicaA, macierzD, space);
+
+	//zamiana na wartosc 2 bitowa
+	lessVal(tablicaA, tablicaB, macierzE);
+	lessVal(tablicaX, tablicaY, macierzE);
+
+	cout << endl << "before postprocessing 4x4: ";
+	decValue(tablicaY, macierzE);
+	dispTab(tablicaY, macierzE, space);
+
+	cout << endl << "after postprocessing 4x4: ";
+	decValue(tablicaB, macierzE);
+	dispTab(tablicaB, macierzE, space);
 	
 
 	for (int i = 0; i < macierzA; i++) {
@@ -147,18 +165,37 @@ int main()
 			delete[] tabB[i];
 			delete[] tabY[i];
 		}
+		if (i < macierzC) {
+			delete[] tabC[i];
+			delete[] tabZ[i];
+		}
+		if (i < macierzD) {
+			delete[] tablicaA[i];
+			delete[] tablicaX[i];
+		}
+		if (i < macierzE) {
+			delete[] tablicaB[i];
+			delete[] tablicaY[i];
+		}
 	}
 
 	delete[] tabA;
 	delete[] tabB;
+	delete[] tabC;
+	delete[] tablicaA;
+	delete[] tablicaB;
 	delete[] tabX;
 	delete[] tabY;
+	delete[] tabZ;
+	delete[] tablicaX;
+	delete[] tablicaY;
 
 	system("Pause");
 	return 0;
 }
 
-void zerowanieTab(int **tabA, int **tabB, int **tabC, int **tablicaA, int **tabX, int **tabY, int **tabZ, int **tablicaX, int macierzA, int macierzB, int macierzC, int macierzD) {
+void zerowanieTab(int **tabA, int **tabB, int **tabC, int **tablicaA, int **tablicaB, int **tabX, int **tabY, int **tabZ, int **tablicaX, 
+	int **tablicaY, int macierzA, int macierzB, int macierzC, int macierzD, int macierzE) {
 	for (int i = 0; i < macierzA; ++i) {
 		for (int j = 0; j < macierzA; ++j) {
 			tabA[i][j] = 0;
@@ -174,6 +211,10 @@ void zerowanieTab(int **tabA, int **tabB, int **tabC, int **tablicaA, int **tabX
 			if (i < macierzD && j < macierzD) {
 				tablicaA[i][j] = 0;
 				tablicaX[i][j] = 0;
+			}
+			if (i < macierzE && j < macierzE) {
+				tablicaB[i][j] = 0;
+				tablicaY[i][j] = 0;
 			}
 		}
 	}
