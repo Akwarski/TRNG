@@ -149,11 +149,11 @@ int main()
 	lessVal(tablicaA, tablicaB, macierzE);
 	lessVal(tablicaX, tablicaY, macierzE);
 
-	cout << endl << "before postprocessing 4x4: ";
+	cout << endl << "before postprocessing 2x2: ";
 	decValue(tablicaY, macierzE);
 	dispTab(tablicaY, macierzE, space);
 
-	cout << endl << "after postprocessing 4x4: ";
+	cout << endl << "after postprocessing 2x2: ";
 	decValue(tablicaB, macierzE);
 	dispTab(tablicaB, macierzE, space);
 	
